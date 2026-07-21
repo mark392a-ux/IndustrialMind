@@ -1,230 +1,175 @@
-# IndustrialMind 🏭
+# 🏭 IndustrialMind
 
-**AI-Powered Industrial Knowledge Intelligence Platform**  
-ET AI Hackathon 2.0 · Phase 2 · Problem Statement 8
+**AI-Powered Industrial Knowledge Intelligence Platform**
 
----
+**ET AI Hackathon 2.0 — Phase 2 · Problem Statement 8**
+*AI for Industrial Knowledge Intelligence (Unified Asset & Operations Brain)*
 
-## What It Does
+![IndustrialMind Dashboard](docs/screenshots/dashboard.png)
 
-Turn scattered engineering documents — P&IDs, maintenance records, safety procedures,
-inspection reports — into a unified, queryable brain for plant operations teams.
-
-| Without IndustrialMind | With IndustrialMind |
-|------------------------|---------------------|
-| Engineer searches 7 disconnected systems | Single natural language query |
-| ~45 minutes to find relevant procedure | ~4 seconds with source citations |
-| Manual permit-to-work creation | Auto-generated from safety procedures |
-| Compliance gaps found during audit | Detected proactively, before audit |
-| RCA takes days across siloed records | Structured RCA in seconds |
+[![Entity Extraction F1](https://img.shields.io/badge/Entity%20F1-0.912-brightgreen)](./EVALUATION.md)
+[![RAGAS Faithfulness](https://img.shields.io/badge/Faithfulness-0.989-brightgreen)](./EVALUATION.md)
+[![Compliance F1](https://img.shields.io/badge/Compliance%20F1-1.000-brightgreen)](./EVALUATION.md)
+[![KG Coverage](https://img.shields.io/badge/KG%20Coverage-100%25-brightgreen)](./EVALUATION.md)
 
 ---
 
-## Evaluation Metrics
+## 🎯 Overview
 
-> These are **real numbers** produced by running `/eval/benchmark.py` against our document corpus.
+Industrial plants run on documents — OISD standards, OEM maintenance manuals, P&IDs, CSB incident reports, permit templates — scattered across shared drives, binders, and institutional memory. When something breaks or an audit is due, engineers spend hours hunting for the right paragraph in the right document.
 
-| Metric | Score | Target | Notes |
-|--------|-------|--------|-------|
-| **Entity Extraction F1** | — | > 0.75 | Run `python eval/benchmark.py` |
-| **RAGAS Faithfulness** | — | > 0.80 | Run `python eval/run_ragas.py` |
-| **RAGAS Answer Relevance** | — | > 0.75 | Run `python eval/run_ragas.py` |
-| **Compliance Precision** | — | > 0.80 | Run `python eval/benchmark.py` |
-| **Compliance Recall** | — | > 0.75 | Run `python eval/benchmark.py` |
-| **Time to Answer** | ~4 sec | vs ~45 min manual | Measured in demo |
-| **KG Linkage Coverage** | — | > 80% docs linked | Run `python eval/kg_stats.py` |
+**IndustrialMind turns that scattered document library into a single, queryable operations brain.** It ingests real industrial documents, builds a hybrid retrieval index and an ontology-backed knowledge graph over them, and exposes four purpose-built agents — Copilot, Root Cause Analysis, Compliance Gap Detection, and Work Permit Generation — all backed by a resilient, self-healing LLM pipeline.
 
-*Fill these in after running eval suite with your API keys configured.*
+**What it replaces**: a 30–45 minute manual document search.
+**What it delivers**: a cited, structured answer in seconds.
+
+**Live Demo**: `http://localhost:3000` (after running `start.bat` / `start.sh`)
 
 ---
 
-## Architecture
+## ✨ Key Features
+
+| # | Feature | What it does |
+|---|---|---|
+| 1 | **Document Ingestion Pipeline** | Parses OISD standards, OEM manuals, CSB reports, P&IDs (via Groq Vision) into indexed, entity-tagged chunks — 37 documents, 159 chunks |
+| 2 | **Expert Knowledge Copilot** | Hybrid RAG (ChromaDB + BM25 + Cohere Rerank v3) with session memory and page-level source citations |
+| 3 | **Knowledge Graph Explorer** | ISO 15926 Part 2 ontology over 423 nodes / 1,399 edges, with an interactive React Flow visual explorer |
+| 4 | **RCA Agent** | 5-step root cause chain — symptom extraction → multi-query RAG → graph traversal → synthesis → PDF export |
+| 5 | **Compliance Gap Detector** | Checks against OISD-105/106/113/116/117/118/129, Factory Act, PESO, API 510/570, with a corpus-presence guard so it never audits against a standard that wasn't actually ingested |
+| 6 | **Intelligent Work Permit Generator** | Generates a PTW PDF with live dates, LOTO steps, gas-testing requirements, a 10-item interactive checklist, and a permit closure section |
+| 7 | **ROI Calculator** | Live sliders (engineers × rate × searches × time saved) showing ₹ monthly/annual savings |
+| 8 | **Query Expansion Engine** | Incident-name expansion map (e.g. "Philadelphia" → the actual technical vocabulary in the source document), fixing historical-incident retrieval failures |
+| 9 | **Smart Intent Router** | 4-way classifier that correctly separates live-equipment RCA queries from historical-incident lookups |
+| 10 | **Structured Report Renderers** | Every agent output renders as a real UI component (5-Why chain, severity-badged gap cards, interactive checklists) — no raw markdown dumped into chat |
+
+---
+
+## 🏗️ Architecture
+
+**Flow**: Document Ingestion → ChromaDB + BM25 + Knowledge Graph → Query Expander → Hybrid Retrieval → Agent Supervisor (4 agents) → 3-Tier LLM Fallback → React Frontend
+
+Full breakdown, diagrams, and the prototype→production migration path: **[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)**
+
+### LLM Orchestration — 3-Tier Fallback
+
+Every agent cascades through this chain automatically on rate limits or provider errors — the user only ever sees a clean message, never a raw error.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    STREAMLIT UI                          │
-│  Copilot │ RCA Agent │ Compliance │ Graph │ Permit      │
-└──────────────────────┬──────────────────────────────────┘
-                       │ HTTP
-┌──────────────────────▼──────────────────────────────────┐
-│                  FASTAPI BACKEND                         │
-│                                                          │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │              AGENT SUPERVISOR                   │    │
-│  │   classify intent → route to correct agent      │    │
-│  └──────┬──────────────┬──────────────┬────────────┘    │
-│         │              │              │                  │
-│  ┌──────▼───┐  ┌───────▼──┐  ┌───────▼──────────┐      │
-│  │Knowledge │  │  RCA     │  │   Compliance     │      │
-│  │Copilot   │  │  Agent   │  │   Agent          │      │
-│  │(Groq)    │  │(Claude)  │  │   (Claude)       │      │
-│  └──────┬───┘  └───────┬──┘  └───────┬──────────┘      │
-│         └──────────────┴──────────────┘                  │
-│                        │                                  │
-│  ┌─────────────────────▼───────────────────────────┐    │
-│  │           TWIN BRAIN RETRIEVAL                   │    │
-│  │                                                   │    │
-│  │  Vector Store (ChromaDB)  +  BM25  → Cohere     │    │
-│  │  Rerank                                          │    │
-│  │                                                   │    │
-│  │  Knowledge Graph (NetworkX / ISO 15926)          │    │
-│  │  Pre-retrieval enrichment                        │    │
-│  └─────────────────────┬───────────────────────────┘    │
-│                        │                                  │
-│  ┌─────────────────────▼───────────────────────────┐    │
-│  │           INGESTION PIPELINE                     │    │
-│  │  LlamaParse + Unstructured + Claude Vision       │    │
-│  │  (P&ID native entity parsing)                    │    │
-│  │  spaCy + LLM entity extraction                   │    │
-│  └──────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────┘
-
-Prototype → Production migration:
-  ChromaDB → Pinecone/Weaviate
-  NetworkX → Neo4j (GraphStore abstraction = zero app changes)
-  SQLite   → PostgreSQL
-  Single plant → Multi-plant (plant_id on all entities)
+DeepSeek R1 (RCA/Compliance reasoning)
+      ↓
+Groq llama-3.3-70b (all agents, primary)
+      ↓
+Groq llama-3.1-8b-instant (fallback 1, separate quota)
+      ↓
+Gemini 1.5 Flash (fallback 2, 1,500 req/day free)
+      ↓
+Friendly error message (last resort)
 ```
 
 ---
 
-## Features
+## 🧱 Tech Stack
 
-| # | Feature | Type |
-|---|---------|------|
-| 1 | Document Ingestion Pipeline | Core |
-| 2 | Expert Knowledge Copilot | Core |
-| 3 | Knowledge Graph Explorer (ISO 15926) | Core |
-| 4 | RCA Agent Chain | Core |
-| 5 | Compliance Gap Detector | Core |
-| 6 | Work Permit Generator ⭐ | Differentiator |
-| 7 | ROI Calculator | Differentiator |
-| 8 | Risk Score Dashboard | Differentiator |
-| 9 | Preset Demo Scenarios | Demo |
-| 10 | RAGAS Evaluation Framework | Eval |
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| UI | Streamlit + React Flow (graph) |
-| Backend | FastAPI + LangChain |
-| Fast LLM | Groq (llama-3.3-70b) — copilot, routing |
-| Reasoning LLM | Claude Sonnet — RCA, compliance, P&ID vision |
-| Vector Store | ChromaDB |
-| Keyword Search | BM25 (rank_bm25) |
-| Reranker | Cohere Rerank |
-| Knowledge Graph | NetworkX + GraphStore abstraction |
-| Ontology | ISO 15926 Part 2 vocabulary |
-| Doc Parsing | LlamaParse + Unstructured |
-| Entity Extraction | spaCy + LLM prompts |
-| RAG Evaluation | RAGAS |
-| PDF Output | ReportLab |
-| Database | SQLite + SQLAlchemy |
-| Infra | Docker + docker-compose |
+| Layer | Technologies |
+|---|---|
+| Frontend | Next.js, React, Tailwind, React Flow |
+| Backend | FastAPI, Python, custom agent supervisor (no LangChain) |
+| Retrieval | ChromaDB (vector), rank_bm25 (keyword), Cohere Rerank v3, custom query expansion engine |
+| Knowledge Graph | NetworkX + ISO 15926 Part 2 ontology |
+| LLMs | Groq (`llama-3.3-70b`, `llama-3.1-8b-instant`), DeepSeek R1, Google Gemini 1.5 Flash |
+| Document Processing | LlamaParse, Unstructured, pdfplumber, Groq Vision (P&IDs) |
+| Output | ReportLab (PDF generation) |
+| Storage | SQLite + SQLAlchemy |
+| Evaluation | RAGAS framework + custom precision/recall/coverage scripts |
+| Local Deployment | `start.bat` / `start.sh` |
 
 ---
 
-## Quick Start
+## 📊 Evaluation Results
 
-### 1. Clone and configure
+Full methodology, per-question breakdown, and raw run output: **[EVALUATION.md](./EVALUATION.md)**
 
+Evaluated on **37 ingested documents** using 20 hand-written ground-truth Q&A pairs, with a dedicated eval model (`llama-3.1-8b-instant`) kept separate from the primary inference model to avoid contamination.
+
+| Metric | Score | Target | Status |
+|---|---|---|---|
+| Entity Extraction F1 | 0.912 | > 0.75 | ✅ |
+| RAGAS Faithfulness | 0.989 | > 0.75 | ✅ |
+| RAGAS Answer Relevancy | 0.889 | > 0.75 | ✅ |
+| RAGAS Context Precision | 0.980 | > 0.70 | ✅ |
+| Compliance Precision | 1.000 | > 0.80 | ✅ |
+| Compliance Recall | 1.000 | > 0.75 | ✅ |
+| Knowledge Graph Coverage | 100% | > 80% | ✅ |
+
+All seven tracked metrics clear their targets, with faithfulness (0.989) the strongest result — indicating minimal hallucination against source documents.
+
+---
+
+## 🚀 Quick Start
+
+**Windows**
+```bat
+git clone <your-repo-url>
+cd industrialmind
+start.bat
+```
+
+**Linux / Mac**
 ```bash
-git clone https://github.com/mark392a-ux/industrialmind
-cd industrialmind/backend
-cp .env.example .env
-# Fill in your API keys in .env
+git clone <your-repo-url>
+cd industrialmind
+./start.sh
 ```
 
-### 2. Run with Docker (recommended)
+**Access**
+- Frontend: `http://localhost:3000`
+- Backend: `http://127.0.0.1:8000`
+- API Docs: `http://127.0.0.1:8000/docs`
 
-```bash
-docker-compose up --build
-# Backend: http://localhost:8000
-# Frontend: http://localhost:3000
-# API docs: http://localhost:8000/docs
-```
-
-### 3. Run locally
-
-```bash
-# Backend
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-
-# Frontend (separate terminal)
-cd frontend
-pip install streamlit
-streamlit run streamlit_app.py
-```
+**Requirements**
+- Python 3.10+
+- Node.js 18+
+- `GROQ_API_KEY` set in `backend/.env`
 
 ---
 
-## Evaluation
+## 🗺️ Roadmap: Prototype → Production
 
-```bash
-cd backend
-python ../eval/benchmark.py       # entity F1 + compliance precision/recall
-python ../eval/run_ragas.py       # RAGAS scores (requires ingested docs + API keys)
-python ../eval/kg_stats.py        # knowledge graph linkage coverage
-```
+| Layer | Current | Production Target |
+|---|---|---|
+| Knowledge Graph | NetworkX, in-memory | Neo4j (persistent, queryable at scale) |
+| Vector Store | ChromaDB, local | Pinecone / PGVector (managed cloud) |
+| Ingestion | Batch document upload | Kafka-based real-time IoT/SCADA feed |
+| Deployment | Local / Render | Docker + docker-compose, multi-tenant with RBAC |
 
-Results written to `/eval/results.json`
-
----
-
-## Document Corpus (real industrial documents)
-
-- OISD Standard 105 — Inspection of Pressure Vessels
-- OISD Standard 118 — Layout for Oil and Gas Installations
-- Factory Act 1948 — Relevant sections (31, 7B, 21)
-- Generic centrifugal pump OEM maintenance manual
-- Sample work orders and inspection reports (synthetic, realistic)
+The retrieval, agentic, and fallback layers are storage-agnostic by design, so each of these can be swapped independently without touching agent logic.
 
 ---
 
-## Scalability
+## 📦 Submission Deliverables
 
-| Component | Prototype | Production |
-|-----------|-----------|-----------|
-| Vector Store | ChromaDB (local) | Pinecone / Weaviate |
-| Knowledge Graph | NetworkX | Neo4j (1-line swap via GraphStore) |
-| Database | SQLite | PostgreSQL |
-| Multi-plant | plant_id field (ready) | Separate tenants |
-| Ontology | ISO 15926 Part 2 subset | Full ISO 15926 + RAMI 4.0 |
+| Deliverable | Location |
+|---|---|
+| Detailed Document (8–10 pages) | `docs/IndustrialMind_Detailed_Document.pdf` |
+| Demo Video (3–4 min) | *[link]* |
+| Architecture Diagram | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
+| Evaluation Report | [EVALUATION.md](./EVALUATION.md) |
 
 ---
 
-## Project Structure
+## 📁 Repository Structure
 
-```
+```text
 industrialmind/
-├── backend/
-│   ├── app/
-│   │   ├── api/          routes.py
-│   │   ├── agents/       supervisor.py (router + all agents)
-│   │   ├── ingestion/    pipeline.py (parse + chunk + embed + extract)
-│   │   ├── graph/        store.py (GraphStore + NetworkX + Neo4j stub)
-│   │   ├── rag/          retriever.py (hybrid search + rerank)
-│   │   ├── models/       db_models.py
-│   │   └── core/         config.py, database.py
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   └── streamlit_app.py
-├── eval/
-│   ├── benchmark.py      (entity F1, compliance precision/recall)
-│   ├── run_ragas.py      (RAGAS evaluation)
-│   ├── kg_stats.py       (graph linkage coverage)
-│   └── results.json      (actual numbers - filled after running)
-├── docs/
-│   └── architecture.md
-└── docker-compose.yml
+├── backend/              # FastAPI + agent supervisor + hybrid RAG + KG
+├── frontend/             # Next.js dashboard
+├── docs/                 # Architecture diagrams + screenshots + detailed document
+├── eval/                 # Evaluation scripts (run_eval.py) & results.json
+├── start.bat / start.sh  # One-click local run
+├── ARCHITECTURE.md
+└── EVALUATION.md
 ```
 
 ---
 
-*Built for ET AI Hackathon 2.0 · Phase 2 · Solo*
+<p align="center">Made with ❤️ for ET AI Hackathon 2.0</p>
