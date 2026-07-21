@@ -139,4 +139,5 @@ Add supporting screenshots to `docs/screenshots/`:
 - `dashboard.png`
 - `knowledge-graph.png`
 - `rca-output.png`
+- `compliance.png`
 - `work-permit.png`
