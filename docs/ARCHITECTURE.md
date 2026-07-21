@@ -135,7 +135,7 @@ This path is deliberately incremental: each component (KG, vector store, ingesti
 
 ## Screenshots
 
-Add supporting screenshots to `docs/screenshots/`:
+Added supporting screenshots to `docs/screenshots/`:
 - `dashboard.png`
 - `knowledge-graph.png`
 - `rca-output.png`
