@@ -7,9 +7,9 @@
 
 ## Diagram
 
-![IndustrialMind Architecture](./architecture-diagram.svg)
+![IndustrialMind Architecture](./architecture-diagram.png)
 
-*(Full-resolution version: `docs/architecture-diagram.svg`)*
+*(Full-resolution version: `docs/architecture-diagram.png`)*
 
 A GitHub-renderable version of the same flow, for quick reference inline:
 
