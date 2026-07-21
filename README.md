@@ -111,7 +111,7 @@ All seven tracked metrics clear their targets, with faithfulness (0.989) the str
 ```bat
 git clone <your-repo-url>
 cd industrialmind
-start.bat
+./start.bat
 ```
 
 **Linux / Mac**
