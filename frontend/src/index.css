@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* ── Tristesse dark palette ────────────────────────────────────────────────── */
+:root {
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Core dark surfaces */
+  --dark-bg:       #07071D;
+  --dark-sidebar:  #0E0E2C;
+  --dark-card:     #12122E;
+  --dark-card2:    #1A1A3E;
+  --dark-card3:    #363255;
+  --dark-border:   rgba(80,76,165,0.18);
+  --dark-border2:  rgba(80,76,165,0.30);
+  --dark-text1:    #F0EFF8;
+  --dark-text2:    #B8B4D8;
+  --dark-text3:    #6B6890;
+
+  /* Light palette */
+  --light-bg:      #F0EFF8;
+  --light-sidebar: #E8E6F4;
+  --light-card:    #FFFFFF;
+  --light-card2:   #F5F3FF;
+  --light-card3:   #EDE9FE;
+  --light-border:  rgba(80,76,165,0.14);
+  --light-border2: rgba(80,76,165,0.24);
+  --light-text1:   #07071D;
+  --light-text2:   #363255;
+  --light-text3:   #7974C3;
+
+  /* Brand accents — both modes */
+  --violet:        #7974C3;          /* Venus Violet — primary accent */
+  --violet-deep:   #504CA5;          /* Brandywine Raspberry — strong accent */
+  --violet-dim:    rgba(121,116,195,0.14);
+  --violet-border: rgba(121,116,195,0.30);
+  --violet-glow:   rgba(80,76,165,0.28);
+  --sweetie:       #E1B7DD;          /* Sweetie Pie — soft highlight */
+  --sweetie-dim:   rgba(225,183,221,0.12);
+  --rust:          #C66247;          /* Emotional — warm CTA */
+  --rust-bright:   #D97452;
+  --rust-dim:      rgba(198,98,71,0.14);
+  --rust-border:   rgba(198,98,71,0.30);
+  --rust-glow:     rgba(198,98,71,0.28);
+
+  /* Status */
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger:  #F87171;
+
+  /* Gradients */
+  --grad-violet:  linear-gradient(135deg, #363255, #504CA5, #7974C3);
+  --grad-rust:    linear-gradient(90deg,  #C66247, #D97452);
+  --grad-brand:   linear-gradient(135deg, #07071D 0%, #363255 50%, #504CA5 100%);
+  --grad-sweetie: linear-gradient(135deg, #E1B7DD, #7974C3);
+}
+
+.dark, :root {
+  --bg:      var(--dark-bg);
+  --sidebar: var(--dark-sidebar);
+  --card:    var(--dark-card);
+  --card2:   var(--dark-card2);
+  --card3:   var(--dark-card3);
+  --border:  var(--dark-border);
+  --border2: var(--dark-border2);
+  --text1:   var(--dark-text1);
+  --text2:   var(--dark-text2);
+  --text3:   var(--dark-text3);
+}
+
+.light {
+  --bg:      var(--light-bg);
+  --sidebar: var(--light-sidebar);
+  --card:    var(--light-card);
+  --card2:   var(--light-card2);
+  --card3:   var(--light-card3);
+  --border:  var(--light-border);
+  --border2: var(--light-border2);
+  --text1:   var(--light-text1);
+  --text2:   var(--light-text2);
+  --text3:   var(--light-text3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text1);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+
+/* Form elements */
+input, select, textarea {
+  font-family: var(--font);
+  letter-spacing: 0.01em;
+}
+input::placeholder, textarea::placeholder {
+  color: var(--text3);
+  opacity: 0.85;
+  font-weight: 400;
+}
+select option { background: var(--card); color: var(--text1); }
+
+/* React Flow */
+.react-flow__background { background: var(--bg) !important; }
+.react-flow__controls {
+  background: var(--card) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+}
+.react-flow__controls-button {
+  background: var(--card) !important;
+  border-bottom: 1px solid var(--border) !important;
+  fill: var(--text2) !important;
+  transition: all 0.15s !important;
+}
+.react-flow__controls-button:hover {
+  background: var(--card2) !important;
+  fill: var(--violet) !important;
+}
+.react-flow__minimap {
+  background: var(--card) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 12px !important;
+}
+
+/* Animations */
+@keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes slideIn { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:none; } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes pulse2  { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes bounce2 { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes glow    { 0%,100%{box-shadow:0 0 12px var(--violet-glow)} 50%{box-shadow:0 0 28px var(--violet-glow)} }
+@keyframes actIn   { from { opacity:0; transform:translateX(10px); } to { opacity:1; transform:none; } }
+
+.anim-fade-up  { animation: fadeUp  .35s cubic-bezier(.16,1,.3,1) both; }
+.anim-fade-in  { animation: fadeIn  .25s ease both; }
+.anim-slide-in { animation: slideIn .3s  cubic-bezier(.16,1,.3,1) both; }
+.anim-spin     { animation: spin    .7s  linear infinite; }
+.anim-pulse    { animation: pulse2  2s   ease infinite; }
+.anim-bounce   { animation: bounce2 1.2s ease infinite; }
+.anim-activity { animation: actIn   .4s  cubic-bezier(.16,1,.3,1) both; }
+.anim-glow     { animation: glow    2.5s ease infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--card2) 50%, var(--card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+/* Prose — markdown rendering (Industrial-Grade Report Layout) */
+.prose-im { line-height: 1.75; }
+.prose-im h2,.prose-im h3 { color: var(--text1); font-weight: 700; margin: 24px 0 12px; }
+.prose-im h2 { font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.prose-im h3 { font-size: 14px; }
+.prose-im p  { color: var(--text2); margin-bottom: 10px; font-size: 14px; }
+.prose-im ul,.prose-im ol { color: var(--text2); font-size: 14px; padding-left: 20px; margin-bottom: 10px; }
+.prose-im li { margin-bottom: 5px; }
+.prose-im strong { color: var(--text1); font-weight: 700; }
+.prose-im code { background: var(--card2); color: var(--violet); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+.prose-im pre  { background: var(--card2); border-radius: 10px; padding: 14px; margin: 10px 0; overflow-x: auto; border: 1px solid var(--border); }
+.prose-im hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+/* ── Industrial Report Tables (Shell/Reliance Standard) ────────────────── */
+.prose-im table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  font-size: 13px; 
+  margin: 16px 0;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.prose-im thead { 
+  background: var(--card3); 
+}
+.prose-im th { 
+  background: var(--card3); 
+  color: var(--text1); 
+  font-weight: 700; 
+  padding: 12px 16px; 
+  border: none;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid var(--violet-border);
+}
+.prose-im td { 
+  color: var(--text2); 
+  padding: 10px 16px; 
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: top;
+}
+/* Alternating row colors for readability in long RCA tables */
+.prose-im tbody tr:nth-child(even) { 
+  background: var(--card); 
+}
+.prose-im tbody tr:hover { 
+  background: var(--violet-dim); 
+}
+
+/* ── Evidence Blockquotes (Exact Text Snippets) ─────────────────────────── */
+.prose-im blockquote { 
+  border-left: 4px solid var(--violet); 
+  padding: 10px 16px; 
+  margin: 12px 0;
+  background: var(--card); 
+  color: var(--text2); 
+  font-style: normal; /* Changed from italic because evidence shouldn't be italic */
+  border-radius: 0 8px 8px 0; 
+  font-size: 13px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}

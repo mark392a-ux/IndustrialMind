@@ -1,0 +1,25 @@
+# Environment secrets
+.env
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+backend/**/__pycache__/
+
+# Node
+node_modules/
+frontend/package-lock.json.bak
+
+# Build artifacts
+frontend/tsconfig.tsbuildinfo
+frontend/dist/
+
+# Vector DB / data (regenerable, will bloat repo)
+backend/data/chroma/
+backend/data/uploads/
+
+# Eval cache
+backend/eval/__pycache__/
+backend/data/*.db
+backend/data/*.pkl

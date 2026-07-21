@@ -1,0 +1,6 @@
+Folder PATH listing
+Volume serial number is 0248-52DD
+C:\USERS\ADMIN\INDUSTRIALMIND\SRC
+Invalid path - \USERS\ADMIN\INDUSTRIALMIND\SRC
+No subfolders exist 
+

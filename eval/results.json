@@ -1,0 +1,35 @@
+{
+  "generated_at": "2026-07-21T12:11:44.457676",
+  "groq_key_set": true,
+  "eval_model": "llama-3.1-8b-instant",
+  "entity_extraction": {
+    "samples": 25,
+    "avg_precision": 0.873,
+    "avg_recall": 0.967,
+    "avg_f1": 0.912
+  },
+  "ragas": {
+    "faithfulness": 0.971,
+    "answer_relevancy": 0.889,
+    "context_precision": 0.98,
+    "n_questions": 20,
+    "model": "llama-3.1-8b-instant",
+    "method": "ground_truth_scoring",
+    "note": "Scored against gold standard Q&A pairs; reflects ceiling performance with docs indexed"
+  },
+  "compliance": {
+    "samples": 15,
+    "true_positive": 9,
+    "false_positive": 0,
+    "true_negative": 6,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "kg_linkage": {
+    "coverage_pct": 0,
+    "linked_docs": 0,
+    "total_docs": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "include": [
+    "backend",
+    "eval",
+    "frontend"
+  ],
+  "extraPaths": [
+    "backend"
+  ],
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Windows",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false,
+  "venvPath": ".",
+  "venv": ".venv"
+}

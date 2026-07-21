@@ -1,0 +1,8 @@
+# Eval-only dependencies — install separately
+# Run: pip install -r eval/requirements.txt
+
+# NOTE: Do NOT install ragas — we use manual Groq scoring instead
+# ragas conflicts with langchain>=0.3 and causes dependency hell
+
+groq==0.11.0
+python-dotenv==1.0.1
