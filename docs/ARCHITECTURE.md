@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — IndustrialMind
+# IndustrialMind
 
 **ET AI Hackathon 2.0 — PS 8: Industrial Knowledge Intelligence**
 **Last Updated**: 22 July 2026
