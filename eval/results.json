@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T12:11:44.457676",
+  "generated_at": "2026-07-21T23:43:04.638735",
   "groq_key_set": true,
   "eval_model": "llama-3.1-8b-instant",
   "entity_extraction": {
@@ -9,7 +9,7 @@
     "avg_f1": 0.912
   },
   "ragas": {
-    "faithfulness": 0.971,
+    "faithfulness": 0.989,
     "answer_relevancy": 0.889,
     "context_precision": 0.98,
     "n_questions": 20,
@@ -28,8 +28,8 @@
     "f1": 1.0
   },
   "kg_linkage": {
-    "coverage_pct": 0,
-    "linked_docs": 0,
-    "total_docs": 0
+    "coverage_pct": 100.0,
+    "linked_docs": 72,
+    "total_docs": 72
   }
 }

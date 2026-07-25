@@ -7,7 +7,7 @@ import {
 import { useStore, type Tab } from '../../../store'
 import { deleteDocument } from '../../../api/client'
 import { Spinner } from '../../ui'
-import type { Document } from '../../types'
+import type { Document } from '../../../types'
 
 const NAV: { id: Tab; icon: React.ReactNode; label: string }[] = [
   { id: 'copilot',    icon: <MessageSquare  size={16} />, label: 'Copilot' },

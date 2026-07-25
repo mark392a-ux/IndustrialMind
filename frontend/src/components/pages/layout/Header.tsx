@@ -1,6 +1,6 @@
 import { Sun, Moon, Bell, RefreshCw } from 'lucide-react'
 import { useStore, type Tab } from '../../../store'
-import type { GraphStats } from '../../types'
+import type { GraphStats } from '../../../types'
 
 const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'copilot', icon: '💬', label: 'Copilot' },

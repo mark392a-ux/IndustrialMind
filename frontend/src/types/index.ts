@@ -46,8 +46,15 @@ export interface RCAResult {
   answer: string
   sources: Source[]
   agent: string
+  error?: string
   equipment_id: string
   symptom: string
+
+  metadata?: {
+    confidence: 'High' | 'Medium' | 'Low'
+    docs_retrieved: number
+    avg_rerank_score: number
+  }
 }
 
 export interface ComplianceResult {
@@ -55,11 +62,15 @@ export interface ComplianceResult {
   sources: Source[]
   agent: string
   standard: string
+
+  blocked?: boolean
 }
 
 export interface PermitResult {
   permit_content: string
   sources: Source[]
+  ptw_number?: string
+  date_issued?: string
   equipment_id: string
   work_type: string
   location: string
