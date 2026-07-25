@@ -97,7 +97,7 @@ Friendly error message (last resort)
 ## 📊 Evaluation Results
 
 Full methodology, per-question breakdown, and raw run output: **[EVALUATION.md](./EVALUATION.md)**
-Full corpus manifest and source/licensing notes: **[CORPUS.md](./CORPUS.md)**
+Full corpus manifest and source/licensing notes: **[CORPUS.md](docs/CORPUS.md)**
 
 Evaluated on **37 ingested documents** using 20 hand-written ground-truth Q&A pairs, with a dedicated eval model (`llama-3.1-8b-instant`) kept separate from the primary inference model to avoid contamination.
 
