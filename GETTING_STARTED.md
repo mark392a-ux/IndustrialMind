@@ -101,7 +101,7 @@ Open **http://localhost:3000** once both are running.
 
 ## 6. Load the document corpus
 
-IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports. **32 of these 37 are bundled directly in [`sample_corpus/`](sample_corpus/)** — see [`CORPUS.md`](CORPUS.md) for the full manifest, categorized by type, with source and redistribution notes for each document. The 5 excluded documents are commercial OEM manufacturer manuals not redistributed here for licensing reasons; `CORPUS.md` explains the exact substitution path.
+IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports. **32 of these 37 are bundled directly in [`Sample_Corpus/`](Sample_Corpus/)** — see [`CORPUS.md`](CORPUS.md) for the full manifest, categorized by type, with source and redistribution notes for each document. The 5 excluded documents are commercial OEM manufacturer manuals not redistributed here for licensing reasons; `CORPUS.md` explains the exact substitution path.
 
 To populate your local instance:
 
