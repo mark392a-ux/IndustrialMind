@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "https://industrialmind-production-7807.up.railway.app/api/v1/:path*"
+    }
+  ]
+}
