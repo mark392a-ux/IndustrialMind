@@ -113,7 +113,7 @@ Evaluated on **37 ingested documents** using 20 hand-written ground-truth Q&A pa
 
 All seven tracked metrics clear their targets, with faithfulness (0.989) the strongest result — indicating minimal hallucination against source documents.
 
-> **Note on sample size:** Compliance Precision/Recall and Knowledge Graph Coverage are evaluated against a 9-case compliance subset and the full 37-document corpus respectively. Perfect scores on a hand-curated set of this size are a starting signal, not a guarantee at production scale — expanding to a larger, adversarial test set is a natural next step (see [EVALUATION.md](./EVALUATION.md) for full methodology).
+> **Note on sample size:** Compliance Precision/Recall is evaluated on 15 total test cases (9 true-positive gap detections + 6 true-negative "no gap" confirmations, 0 false positives, 0 false negatives), and Knowledge Graph Coverage reflects 72/72 extracted entities linked across the full 37-document corpus. Perfect scores on hand-curated sets of this size are a strong initial signal, not a guarantee at production scale — expanding to a larger, adversarial test set is a natural next step (see [EVALUATION.md](./EVALUATION.md) for full methodology).
 
 ---
 
@@ -162,17 +162,17 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 
 ## 🖼️ Screenshots
 
-| Dashboard |  Work Permit Generator |
+| Dashboard | Knowledge Graph Explorer |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Work Permit](docs/screenshots/work-permit.png) |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Knowledge Graph](docs/screenshots/knowledge-graph.png) |
 
 | RCA Output | Compliance Gap Detector |
 |---|---|
 | ![RCA Output](docs/screenshots/rca-output.png) | ![Compliance](docs/screenshots/compliance.png) |
 
-| Knowledge Graph |
+| Work Permit Generator |
 |---|
-| ![Knowledge Graph](docs/screenshots/knowledge-graph.png)|
+| ![Work Permit](docs/screenshots/work-permit.png) |
 
 ---
 
