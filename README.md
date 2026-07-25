@@ -29,7 +29,7 @@
 
 Industrial plants run on documents — OISD standards, OEM maintenance manuals, P&IDs, CSB incident reports, permit templates — scattered across shared drives, binders, and institutional memory. When something breaks or an audit is due, engineers spend hours hunting for the right paragraph in the right document.
 
-**IndustrialMind turns that scattered document library into a single, queryable operations brain.** It ingests real industrial documents, builds a hybrid retrieval index and an ontology-backed knowledge graph over them, and exposes four purpose-built agents — Copilot, Root Cause Analysis, Compliance Gap Detection, and Work Permit Generation — all backed by a resilient, self-healing LLM pipeline.
+**IndustrialMind turns that scattered document library into a single, queryable operations brain.** It ingests real industrial documents, builds a hybrid retrieval index and an ontology-inspired knowledge graph over them, and exposes four purpose-built agents — Copilot, Root Cause Analysis, Compliance Gap Detection, and Work Permit Generation — all backed by a resilient, self-healing LLM pipeline.
 
 **What it replaces**: a 30–45 minute manual document search.
 **What it delivers**: a cited, structured answer in seconds.
@@ -42,7 +42,7 @@ Industrial plants run on documents — OISD standards, OEM maintenance manuals, 
 |---|---|---|
 | 1 | **Document Ingestion Pipeline** | Parses OISD standards, OEM manuals, CSB reports, P&IDs (via Groq Vision) into indexed, entity-tagged chunks — 37 documents, 159 chunks |
 | 2 | **Expert Knowledge Copilot** | Hybrid RAG (ChromaDB + BM25 + Cohere Rerank v3) with session memory and page-level source citations |
-| 3 | **Knowledge Graph Explorer** | ISO 15926 Part 2 ontology over 423 nodes / 1,399 edges, with an interactive React Flow visual explorer |
+| 3 | **Knowledge Graph Explorer** | ISO 15926 Part 2-inspired entity typing over 423 nodes / 1,399 edges, with an interactive React Flow visual explorer |
 | 4 | **RCA Agent** | 5-step root cause chain — symptom extraction → multi-query RAG → graph traversal → synthesis → PDF export |
 | 5 | **Compliance Gap Detector** | Checks against OISD-105/106/113/116/117/118/129, Factory Act, PESO, API 510/570, with a corpus-presence guard so it never audits against a standard that wasn't actually ingested |
 | 6 | **Intelligent Work Permit Generator** | Generates a PTW PDF with live dates, LOTO steps, gas-testing requirements, a 10-item interactive checklist, and a permit closure section |
@@ -81,10 +81,10 @@ Friendly error message (last resort)
 
 | Layer | Technologies |
 |---|---|
-| Frontend | Next.js, React, Tailwind, React Flow |
-| Backend | FastAPI, Python, custom agent supervisor (no LangChain) |
+| Frontend | Vite + React, Tailwind, React Flow |
+| Backend | FastAPI, Python — custom agent supervisor for orchestration (LangChain was used early in development and later replaced; see [CHANGES.md](docs/CHANGES.md)) |
 | Retrieval | ChromaDB (vector), rank_bm25 (keyword), Cohere Embed v3 + Rerank v3, custom query expansion engine |
-| Knowledge Graph | NetworkX + ISO 15926 Part 2 ontology |
+| Knowledge Graph | NetworkX + ISO 15926 Part 2-inspired entity typing |
 | LLMs | Groq (`llama-3.3-70b`, `llama-3.1-8b-instant`), DeepSeek R1, Google Gemini 1.5 Flash |
 | Document Processing | LlamaParse, Unstructured, pdfplumber, Groq Vision (P&IDs) |
 | Output | ReportLab (PDF generation) |
@@ -112,6 +112,8 @@ Evaluated on **37 ingested documents** using 20 hand-written ground-truth Q&A pa
 | Knowledge Graph Coverage | 100% | > 80% | ✅ |
 
 All seven tracked metrics clear their targets, with faithfulness (0.989) the strongest result — indicating minimal hallucination against source documents.
+
+> **Note on sample size:** Compliance Precision/Recall and Knowledge Graph Coverage are evaluated against a 9-case compliance subset and the full 37-document corpus respectively. Perfect scores on a hand-curated set of this size are a starting signal, not a guarantee at production scale — expanding to a larger, adversarial test set is a natural next step (see [EVALUATION.md](./EVALUATION.md) for full methodology).
 
 ---
 
@@ -183,7 +185,7 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 | Demo Video (3–4 min) | [Google Drive](https://drive.google.com/file/d/1qvt_0BLrzOQfd_DEKtRlAAKwcJyjWOCN/view?pli=1) |
 | Architecture Diagram | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | Evaluation Report | [EVALUATION.md](./EVALUATION.md) |
-| Corpus Manifest | [CORPUS.md](./CORPUS.md) |
+| Corpus Manifest | [CORPUS.md](docs/CORPUS.md) |
 | Live Demo | [industrial-mind-6wtm.vercel.app](https://industrial-mind-6wtm.vercel.app) |
 
 ---
@@ -194,12 +196,11 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 IndustrialMind/
 ├── backend/              # FastAPI + agent supervisor + hybrid RAG + KG
 ├── frontend/             # React (Vite) dashboard
-├── docs/                 # Architecture diagrams + screenshots + detailed document
+├── docs/                 # Architecture, corpus manifest, changes log, screenshots, detailed document
 ├── eval/                 # Evaluation scripts (run_eval.py) & results.json
-├── sample_corpus/        # Bundled evaluation documents (see CORPUS.md)
+├── sample_corpus/        # Bundled evaluation documents (see docs/CORPUS.md)
 ├── start.bat / start.sh  # One-click local run
 ├── GETTING_STARTED.md
-├── CORPUS.md
 └── EVALUATION.md
 ```
 
