@@ -101,13 +101,15 @@ Open **http://localhost:3000** once both are running.
 
 ## 6. Load the document corpus
 
-IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports (see [`EVALUATION.md`](EVALUATION.md) for the full list and methodology). To populate your local instance:
+IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports. **32 of these 37 are bundled directly in [`sample_corpus/`](sample_corpus/)** — see [`CORPUS.md`](CORPUS.md) for the full manifest, categorized by type, with source and redistribution notes for each document. The 5 excluded documents are commercial OEM manufacturer manuals not redistributed here for licensing reasons; `CORPUS.md` explains the exact substitution path.
+
+To populate your local instance:
 
 1. Go to **Documents** in the sidebar.
-2. Use **Upload PDF**, selecting the correct **Document Type** for each file (Procedure/Standard, Manual, Inspection, Work Order).
+2. Use **Upload PDF**, selecting the correct **Document Type** for each file, matching the category shown in [`CORPUS.md`](CORPUS.md) (Procedure/Standard, Manual, Inspection, Work Order).
 3. Wait for each document to show a green "Indexed" checkmark before uploading the next — ingestion runs the full pipeline (parsing → chunking → embedding → knowledge graph linking) per document.
 
-Documents used for evaluation are not bundled in this repo (see `backend/data/uploads/` in `.gitignore`) since several are OEM manuals and standards that may carry redistribution restrictions. Substitute your own industrial documents, or contact the maintainer for the evaluation set used in judging.
+Prefer not to set up locally? A live instance is running at **[industrial-mind-6wtm.vercel.app](https://industrial-mind-6wtm.vercel.app)** — see the main [README](README.md#-live-demo) for details and known free-tier rate-limit constraints.
 
 ## 7. Run the evaluation suite (optional)
 
