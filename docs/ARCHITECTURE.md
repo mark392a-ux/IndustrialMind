@@ -17,7 +17,7 @@ A GitHub-renderable version of the same flow, for quick reference inline:
 graph TD
     A[Document Ingestion<br/>LlamaParse + Unstructured + pdfplumber + Groq Vision] --> B[ChromaDB<br/>Vector Store]
     A --> C[BM25 Index<br/>rank_bm25]
-    A --> D[Knowledge Graph<br/>NetworkX + ISO 15926 Part 2]
+    A --> D[Knowledge Graph<br/>NetworkX + ISO 15926 Part 2-inspired typing]
 
     E[User Query] --> F[Query Expander<br/>incident map + proximity boost]
     F --> G[Hybrid Retrieval<br/>Vector + BM25 + Cohere Rerank v3]
@@ -33,7 +33,7 @@ graph TD
 
     I & J & K & L --> M[3-Tier LLM Fallback<br/>DeepSeek R1 → Groq 70B → Groq 8B → Gemini Flash]
     M --> N[Structured Output Layer<br/>UI renderers + ReportLab PDF]
-    N --> O[React Frontend<br/>Next.js]
+    N --> O[React Frontend<br/>Vite + React]
 ```
 
 ---
@@ -59,7 +59,9 @@ Each stage below matches what is actually implemented, not just what was origina
 |---|---|---|
 | **ChromaDB** | Semantic/vector search | Dense embeddings per chunk |
 | **BM25** (`rank_bm25`) | Keyword/exact-match search | Catches standard codes and tag numbers vector search alone misses |
-| **Knowledge Graph** (NetworkX + ISO 15926 Part 2) | Structural/relational search | 423 nodes, 1,399 edges, 99.4% document linkage coverage. Node types: `FunctionalObject`, `PhysicalObject`, `Activity`, `ClassOfEquipment`, `Document` |
+| **Knowledge Graph** (NetworkX + ISO 15926 Part 2-inspired typing) | Structural/relational search | ⚠️ Node/edge counts and coverage % pending reconciliation across docs — see note below. Node types: `FunctionalObject`, `PhysicalObject`, `Activity`, `ClassOfEquipment`, `Document` |
+
+> **Note on graph statistics:** node count, edge count, and coverage percentage currently differ across this file, EVALUATION.md, and the live `/api/v1/graph/stats` endpoint — likely because this document was written before the final re-ingestion pass. Query the live endpoint for ground truth and update all documents to match before final submission.
 
 ## 3. Query Expander (`query_expander.py`)
 
@@ -78,7 +80,7 @@ Runs before retrieval, not after — this is what fixes CSB/incident-document re
 
 ## 5. Agentic Layer
 
-A **custom supervisor** (`supervisor.py`) — intentionally built without LangChain for direct control over routing and failure handling.
+A **custom supervisor** (`supervisor.py`) — built to replace an earlier LangChain-based prototype, for direct control over routing and failure handling (see `CHANGES.md`).
 
 **Smart Intent Router**: 4-way classifier — `copilot` / `rca` / `compliance` / `permit`. Notably, this router sends historical-incident questions (e.g. about a past CSB report) to the **Copilot** agent, not RCA — RCA only triggers for live equipment failures tied to an actual equipment tag.
 
@@ -102,7 +104,7 @@ Every agent cascades through this chain automatically on rate limits, server err
 ## 7. Output & Frontend
 
 - **Structured output layer**: every agent's response is rendered through a dedicated UI component (5-Why chain with visual connectors, severity-badged gap cards, interactive checklists) — no raw markdown or box-drawing characters — plus a ReportLab-generated PDF where applicable.
-- **Frontend**: Next.js + React (replacing the originally planned Streamlit UI). Includes a React Flow–based Knowledge Graph explorer, an ROI calculator, and an activity/timeline panel showing the agent chain as it runs.
+- **Frontend**: Vite + React (replacing the originally planned Streamlit UI). Includes a React Flow–based Knowledge Graph explorer, an ROI calculator, and an activity/timeline panel showing the agent chain as it runs.
 
 ---
 
@@ -113,10 +115,10 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design — s
 | Layer | Current (Prototype) | Production Target |
 |---|---|---|
 | Knowledge Graph | NetworkX, in-memory | **Neo4j** — persistent, queryable at scale |
-| Vector store | ChromaDB, local | **Pinecone / PGVector** — managed cloud vector store |
+| Vector store | ChromaDB (Railway persistent volume) | **Pinecone / PGVector** — managed cloud vector store |
 | Data ingestion | Batch document upload | **Kafka**-based real-time IoT/SCADA ingestion |
-| Deployment | Local / Render, `start.bat` / `start.sh` | **Docker + docker-compose**, multi-tenant with RBAC |
-| Hosting | Single-tenant local/cloud instance | Multi-tenant cloud deployment |
+| Deployment | **Railway (backend) + Vercel (frontend)** — live; `start.bat` / `start.sh` for local | **Docker + docker-compose**, multi-tenant with RBAC |
+| Hosting | Single-tenant cloud instance | Multi-tenant cloud deployment |
 
 This path is deliberately incremental: each component (KG, vector store, ingestion, deployment) can be swapped independently without touching the agent supervisor, retrieval logic, or fallback chain.
 
