@@ -29,6 +29,52 @@ def get_groq():
 
 
 # singletons for chroma + bm25
+_chroma_client = None
+_collection = None
+_cohere_client = None
+
+
+def get_cohere():
+    global _cohere_client
+    if _cohere_client is None:
+        _cohere_client = cohere.Client(api_key=settings.cohere_api_key)
+    return _cohere_client
+
+
+def embed_texts(texts: list[str], input_type: str = "search_document") -> list[list[float]]:
+    """Call Cohere directly — bypasses ChromaDB's embedding_function wrapper entirely."""
+    co = get_cohere()
+    resp = co.embed(
+        texts=texts,
+        model="embed-english-v3.0",
+        input_type=input_type,
+    )
+    return resp.embeddings
+
+
+def get_collection():
+    global _chroma_client, _collection
+    if _collection is None:
+        _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
+        _collection = _chroma_client.get_or_create_collection(
+            name="industrialmind",
+            metadata={"hnsw:space": "cosine"},
+            # no embedding_function — we always pass embeddings explicitly below
+        )
+    return _collection
+
+
+def get_collection():
+    global _chroma_client, _collection
+    if _collection is None:
+        _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
+        _collection = _chroma_client.get_or_create_collection(
+            name="industrialmind",
+            metadata={"hnsw:space": "cosine"},
+        )
+    return _collection
+
+
 _bm25_corpus = []
 _bm25_meta   = []
 _bm25_index  = None
@@ -254,11 +300,14 @@ async def ingest_document(file_path, doc_id, filename, doc_type="manual",
             })
 
     if all_chunks:
-        collection.upsert(
-            ids=[c["id"] for c in all_chunks],
-            documents=[c["text"] for c in all_chunks],
-            metadatas=[{k: v for k, v in c.items() if k != "text"} for c in all_chunks],
-        )
+    texts = [c["text"] for c in all_chunks]
+    embeddings = embed_texts(texts, input_type="search_document")
+    collection.upsert(
+        ids=[c["id"] for c in all_chunks],
+        embeddings=embeddings,
+        documents=texts,
+        metadatas=[{k: v for k, v in c.items() if k != "text"} for c in all_chunks],
+    )
 
     for chunk in all_chunks:
         add_to_bm25(chunk["text"], {k: v for k, v in chunk.items() if k != "text"})
