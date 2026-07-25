@@ -15,7 +15,7 @@ export default function Header({
   onRefreshStats 
 }: { 
   graphStats: GraphStats | null 
-  onRefreshStats: () => Promise<void>   // Make it async
+  onRefreshStats?: () => Promise<void>   // Make it async
 }) {
   const { documents, activeTab, setActiveTab, theme, toggleTheme } = useStore()
   
