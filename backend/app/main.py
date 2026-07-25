@@ -9,11 +9,6 @@ from app.api.routes import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-
-    # ChromaDB's default embedding function downloads a ~90MB ONNX model on
-    # first use. Doing that inside a user's upload request is what's causing
-    # the 502s — Railway's proxy times out before the download+load finishes.
-    # Forcing it here moves that one-time cost to container startup instead.
     from app.ingestion.pipeline import get_collection
     try:
         collection = get_collection()
@@ -21,7 +16,6 @@ async def lifespan(app: FastAPI):
         collection.delete(ids=["__warmup__"])
     except Exception as e:
         print(f"Embedding warmup failed (non-fatal): {e}")
-
     yield
 
 
