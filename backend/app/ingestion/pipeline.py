@@ -63,18 +63,6 @@ def get_collection():
         )
     return _collection
 
-
-def get_collection():
-    global _chroma_client, _collection
-    if _collection is None:
-        _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
-        _collection = _chroma_client.get_or_create_collection(
-            name="industrialmind",
-            metadata={"hnsw:space": "cosine"},
-        )
-    return _collection
-
-
 _bm25_corpus = []
 _bm25_meta   = []
 _bm25_index  = None
@@ -301,12 +289,19 @@ async def ingest_document(file_path, doc_id, filename, doc_type="manual",
 
     if all_chunks:
     texts = [c["text"] for c in all_chunks]
-    embeddings = embed_texts(texts, input_type="search_document")
+    embeddings = embed_texts(
+        texts,
+        input_type="search_document",
+    )
+
     collection.upsert(
         ids=[c["id"] for c in all_chunks],
         embeddings=embeddings,
         documents=texts,
-        metadatas=[{k: v for k, v in c.items() if k != "text"} for c in all_chunks],
+        metadatas=[
+            {k: v for k, v in c.items() if k != "text"}
+            for c in all_chunks
+        ],
     )
 
     for chunk in all_chunks:
