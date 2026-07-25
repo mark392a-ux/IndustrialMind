@@ -101,12 +101,12 @@ Open **http://localhost:3000** once both are running.
 
 ## 6. Load the document corpus
 
-IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports. **32 of these 37 are bundled directly in [`Sample_Corpus/`](Sample_Corpus/)** — see [`CORPUS.md`](CORPUS.md) for the full manifest, categorized by type, with source and redistribution notes for each document. The 5 excluded documents are commercial OEM manufacturer manuals not redistributed here for licensing reasons; `CORPUS.md` explains the exact substitution path.
+IndustrialMind ships evaluated against a 37-document corpus of real industrial standards, manuals, and incident reports. **32 of these 37 are bundled directly in [`Sample_Corpus/`](docs/Sample_Corpus/)** — see [`CORPUS.md`](docs/CORPUS.md) for the full manifest, categorized by type, with source and redistribution notes for each document. The 5 excluded documents are commercial OEM manufacturer manuals not redistributed here for licensing reasons; `CORPUS.md` explains the exact substitution path.
 
 To populate your local instance:
 
 1. Go to **Documents** in the sidebar.
-2. Use **Upload PDF**, selecting the correct **Document Type** for each file, matching the category shown in [`CORPUS.md`](CORPUS.md) (Procedure/Standard, Manual, Inspection, Work Order).
+2. Use **Upload PDF**, selecting the correct **Document Type** for each file, matching the category shown in [`CORPUS.md`](docs/CORPUS.md) (Procedure/Standard, Manual, Inspection, Work Order).
 3. Wait for each document to show a green "Indexed" checkmark before uploading the next — ingestion runs the full pipeline (parsing → chunking → embedding → knowledge graph linking) per document.
 
 Prefer not to set up locally? A live instance is running at **[industrial-mind-6wtm.vercel.app](https://industrial-mind-6wtm.vercel.app)** — see the main [README](README.md#-live-demo) for details and known free-tier rate-limit constraints.
