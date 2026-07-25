@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Optional
 
 import chromadb
+import cohere
 import pdfplumber
 from groq import Groq
 from pypdf import PdfReader
@@ -28,21 +29,6 @@ def get_groq():
 
 
 # singletons for chroma + bm25
-_chroma_client = None
-_collection = None
-
-
-def get_collection():
-    global _chroma_client, _collection
-    if _collection is None:
-        _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
-        _collection = _chroma_client.get_or_create_collection(
-            name="industrialmind",
-            metadata={"hnsw:space": "cosine"},
-        )
-    return _collection
-
-
 _bm25_corpus = []
 _bm25_meta   = []
 _bm25_index  = None

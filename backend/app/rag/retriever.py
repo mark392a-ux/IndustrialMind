@@ -9,6 +9,7 @@ import re
 from typing import Optional
 import cohere
 
+from app.ingestion.pipeline import get_collection, get_bm25, embed_texts
 from app.core.config import settings
 from app.ingestion.pipeline import get_collection, get_bm25
 from app.graph.store import get_graph_store
@@ -54,8 +55,9 @@ def vector_search(query, n_results=10, plant_id=None, doc_type=None):
     if doc_type:
         where["doc_type"] = doc_type
     try:
+        query_embedding = embed_texts([query], input_type="search_query")[0]
         res = collection.query(
-            query_texts=[query],
+            query_embeddings=[query_embedding],
             n_results=min(n_results, collection.count() or 1),
             where=where if where else None,
         )
