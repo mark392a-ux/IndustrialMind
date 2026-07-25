@@ -24,8 +24,6 @@ Industrial plants run on documents — OISD standards, OEM maintenance manuals, 
 **What it delivers**: a cited, structured answer in seconds.
 
 **Live Demo**: `http://localhost:3000` (after running `start.bat` / `start.sh`)
-## Quick Start
-New to this repo? See [GETTING_STARTED.md](GETTING_STARTED.md) for full setup instructions.
 
 ---
 
@@ -108,6 +106,7 @@ All seven tracked metrics clear their targets, with faithfulness (0.989) the str
 ---
 
 ## 🚀 Quick Start
+New to this repo? See [GETTING_STARTED.md](GETTING_STARTED.md) for full setup instructions.
 
 **Windows**
 ```bat
