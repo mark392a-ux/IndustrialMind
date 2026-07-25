@@ -11,6 +11,17 @@
 [![RAGAS Faithfulness](https://img.shields.io/badge/Faithfulness-0.989-brightgreen)](./EVALUATION.md)
 [![Compliance F1](https://img.shields.io/badge/Compliance%20F1-1.000-brightgreen)](./EVALUATION.md)
 [![KG Coverage](https://img.shields.io/badge/KG%20Coverage-100%25-brightgreen)](./EVALUATION.md)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://industrial-mind-6wtm.vercel.app)
+
+---
+
+## 🚀 Live Demo
+
+- **App:** [industrial-mind-6wtm.vercel.app](https://industrial-mind-6wtm.vercel.app)
+- **API:** [industrialmind-production-7807.up.railway.app](https://industrialmind-production-7807.up.railway.app)
+- **API Docs (Swagger):** [industrialmind-production-7807.up.railway.app/docs](https://industrialmind-production-7807.up.railway.app/docs)
+
+> The live instance runs on free-tier API quotas (Groq, Cohere). Rapid bulk document uploads may hit a rate limit after several consecutive ingestions — this is a quota constraint, not an application bug. For full corpus testing, see [Getting Started](GETTING_STARTED.md) to run locally with your own keys.
 
 ---
 
@@ -22,8 +33,6 @@ Industrial plants run on documents — OISD standards, OEM maintenance manuals, 
 
 **What it replaces**: a 30–45 minute manual document search.
 **What it delivers**: a cited, structured answer in seconds.
-
-**Live Demo**: `http://localhost:3000` (after running `start.bat` / `start.sh`)
 
 ---
 
@@ -74,20 +83,21 @@ Friendly error message (last resort)
 |---|---|
 | Frontend | Next.js, React, Tailwind, React Flow |
 | Backend | FastAPI, Python, custom agent supervisor (no LangChain) |
-| Retrieval | ChromaDB (vector), rank_bm25 (keyword), Cohere Rerank v3, custom query expansion engine |
+| Retrieval | ChromaDB (vector), rank_bm25 (keyword), Cohere Embed v3 + Rerank v3, custom query expansion engine |
 | Knowledge Graph | NetworkX + ISO 15926 Part 2 ontology |
 | LLMs | Groq (`llama-3.3-70b`, `llama-3.1-8b-instant`), DeepSeek R1, Google Gemini 1.5 Flash |
 | Document Processing | LlamaParse, Unstructured, pdfplumber, Groq Vision (P&IDs) |
 | Output | ReportLab (PDF generation) |
 | Storage | SQLite + SQLAlchemy |
 | Evaluation | RAGAS framework + custom precision/recall/coverage scripts |
-| Local Deployment | `start.bat` / `start.sh` |
+| Deployment | Railway (backend, persistent volume) + Vercel (frontend) — live; `start.bat` / `start.sh` for local |
 
 ---
 
 ## 📊 Evaluation Results
 
 Full methodology, per-question breakdown, and raw run output: **[EVALUATION.md](./EVALUATION.md)**
+Full corpus manifest and source/licensing notes: **[CORPUS.md](./CORPUS.md)**
 
 Evaluated on **37 ingested documents** using 20 hand-written ground-truth Q&A pairs, with a dedicated eval model (`llama-3.1-8b-instant`) kept separate from the primary inference model to avoid contamination.
 
@@ -106,19 +116,20 @@ All seven tracked metrics clear their targets, with faithfulness (0.989) the str
 ---
 
 ## 🚀 Quick Start
-New to this repo? See [GETTING_STARTED.md](GETTING_STARTED.md) for full setup instructions.
+
+New to this repo? See [GETTING_STARTED.md](GETTING_STARTED.md) for full setup instructions, including required API keys.
 
 **Windows**
 ```bat
-git clone <your-repo-url>
-cd industrialmind
+git clone https://github.com/mark392a-ux/IndustrialMind.git
+cd IndustrialMind
 ./start.bat
 ```
 
 **Linux / Mac**
 ```bash
-git clone <your-repo-url>
-cd industrialmind
+git clone https://github.com/mark392a-ux/IndustrialMind.git
+cd IndustrialMind
 ./start.sh
 ```
 
@@ -130,7 +141,7 @@ cd industrialmind
 **Requirements**
 - Python 3.10+
 - Node.js 18+
-- `GROQ_API_KEY` set in `backend/.env`
+- API keys in `backend/.env` — see [GETTING_STARTED.md](GETTING_STARTED.md#api-keys) for the full list (Groq, Cohere, Gemini, DeepSeek)
 
 ---
 
@@ -139,9 +150,9 @@ cd industrialmind
 | Layer | Current | Production Target |
 |---|---|---|
 | Knowledge Graph | NetworkX, in-memory | Neo4j (persistent, queryable at scale) |
-| Vector Store | ChromaDB, local | Pinecone / PGVector (managed cloud) |
+| Vector Store | ChromaDB (Railway persistent volume) | Pinecone / PGVector (managed cloud) |
 | Ingestion | Batch document upload | Kafka-based real-time IoT/SCADA feed |
-| Deployment | Local / Render | Docker + docker-compose, multi-tenant with RBAC |
+| Deployment | Railway + Vercel | Docker + docker-compose, multi-tenant with RBAC |
 
 The retrieval, agentic, and fallback layers are storage-agnostic by design, so each of these can be swapped independently without touching agent logic.
 
@@ -168,23 +179,27 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 | Deliverable | Location |
 |---|---|
 | Detailed Document (8–10 pages) | `docs/IndustrialMind_Detailed_Document.pdf` |
-| Starting_Guide | [Getting_Started.md](./Getting_Started.md) |
-| Demo Video (3–4 min) | https://drive.google.com/file/d/1qvt_0BLrzOQfd_DEKtRlAAKwcJyjWOCN/view?pli=1 |
+| Starting Guide | [GETTING_STARTED.md](./GETTING_STARTED.md) |
+| Demo Video (3–4 min) | [Google Drive](https://drive.google.com/file/d/1qvt_0BLrzOQfd_DEKtRlAAKwcJyjWOCN/view?pli=1) |
 | Architecture Diagram | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | Evaluation Report | [EVALUATION.md](./EVALUATION.md) |
+| Corpus Manifest | [CORPUS.md](./CORPUS.md) |
+| Live Demo | [industrial-mind-6wtm.vercel.app](https://industrial-mind-6wtm.vercel.app) |
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-industrialmind/
+IndustrialMind/
 ├── backend/              # FastAPI + agent supervisor + hybrid RAG + KG
-├── frontend/             # Next.js dashboard
+├── frontend/             # React (Vite) dashboard
 ├── docs/                 # Architecture diagrams + screenshots + detailed document
 ├── eval/                 # Evaluation scripts (run_eval.py) & results.json
+├── sample_corpus/        # Bundled evaluation documents (see CORPUS.md)
 ├── start.bat / start.sh  # One-click local run
-├── ARCHITECTURE.md
+├── GETTING_STARTED.md
+├── CORPUS.md
 └── EVALUATION.md
 ```
 
