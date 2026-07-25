@@ -24,6 +24,8 @@ Industrial plants run on documents — OISD standards, OEM maintenance manuals, 
 **What it delivers**: a cited, structured answer in seconds.
 
 **Live Demo**: `http://localhost:3000` (after running `start.bat` / `start.sh`)
+## Quick Start
+New to this repo? See [GETTING_STARTED.md](GETTING_STARTED.md) for full setup instructions.
 
 ---
 
@@ -167,6 +169,7 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 | Deliverable | Location |
 |---|---|
 | Detailed Document (8–10 pages) | `docs/IndustrialMind_Detailed_Document.pdf` |
+| Starting_Guide | [Getting_Started.md](./Getting_Started.md) |
 | Demo Video (3–4 min) | https://drive.google.com/file/d/1qvt_0BLrzOQfd_DEKtRlAAKwcJyjWOCN/view?pli=1 |
 | Architecture Diagram | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | Evaluation Report | [EVALUATION.md](./EVALUATION.md) |
