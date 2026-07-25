@@ -2,7 +2,7 @@
 
 IndustrialMind is evaluated on 37 real industrial documents (159 chunks) across five categories. This manifest lists every document used, its origin, and whether it's bundled directly in this repository or excluded for licensing reasons.
 
-**32 of 37 documents are bundled in [`docs/Sample_Corpus/`](sample_corpus/).** The 4 excluded documents are commercial OEM manufacturer manuals — cited here by title for transparency, but not redistributed. See [Redistribution Notes](#redistribution-notes) below.
+**32 of 37 documents are bundled in [`docs/Sample_Corpus/`](docs/sample_corpus/).** The 4 excluded documents are commercial OEM manufacturer manuals — cited here by title for transparency, but not redistributed. See [Redistribution Notes](#redistribution-notes) below.
 
 ---
 
