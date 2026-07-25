@@ -76,12 +76,16 @@ TP: 9 | FP: 0 | TN: 6 | FN: 0
 
 Tested Standards: OISD-105, 106, 113, 116, 117, 118, 129 + Factory Act + PESO.
 
+> **Sample size note:** This evaluates 15 total compliance test cases (9 true-positive gap detections + 6 true-negative "no gap" confirmations), 0 false positives, 0 false negatives. A perfect score on a 15-case hand-curated set is a strong initial signal, not a guarantee at production scale — a larger, adversarial compliance test set (including edge cases like partial/ambiguous standard coverage) is a natural next step before this number should be read as production-grade.
+
 ### 4. Knowledge Graph Linkage Coverage
 
 ```text
 Coverage : 100.0%  (Target: > 80%)  ✅
-Linked   : 72 / 72 docs
+Linked   : 72 / 72 extracted entities
 ```
+
+> **Clarification:** "72" refers to distinct entities extracted and linked across the 37-document corpus (equipment tags, standards, activities, etc.) — not a document count. The corpus itself is 37 documents; entities are the graph nodes derived from them.
 
 ---
 
@@ -136,6 +140,8 @@ Eval model:   llama-3.1-8b-instant  (separate quota from 70b)
 Results saved → eval/results.json
 ```
 
+> **Note:** the raw console output above is reproduced verbatim from `run_eval.py` and still prints "72 / 72 docs" — this is a labeling bug in the script's print statement (should read "entities"), not a discrepancy in the underlying data. Worth a one-line fix in `run_eval.py` for the next run; see clarification under section 4 above for the correct interpretation in the meantime.
+
 ---
 
 ## Methodology
@@ -168,7 +174,7 @@ Results saved → eval/results.json
 
 ## Key Strengths Demonstrated
 
-- Near-perfect compliance detection
+- Near-perfect compliance detection on a 15-case test set (9 true positives, 6 true negatives) — see sample-size note above
 - Excellent faithfulness (minimal hallucination)
 - Strong knowledge graph integration for contextual answers
 - Robust fallback chain ensures reliability under production-like conditions
