@@ -73,7 +73,7 @@ No additional environment configuration is needed on the frontend — it talks t
 From the repository root, use the provided start script:
 
 ```bash
-start.bat      # Windows
+./start.bat      # Windows
 ./start.sh     # macOS / Linux
 ```
 
