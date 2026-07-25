@@ -84,6 +84,6 @@ IndustrialMind is evaluated on 37 real industrial documents (159 chunks) across 
 
 To reproduce the evaluation results in [`EVALUATION.md`](EVALUATION.md):
 
-1. Upload each file in [`sample_corpus/`](sample_corpus/) via the **Documents** panel, matching the **Document Type** shown in the category tables above (Procedure/Standard, Manual, Inspection, Work Order).
+1. Upload each file in [Sample Corpus](Sample_Corpus/) via the **Documents** panel, matching the **Document Type** shown in the category tables above (Procedure/Standard, Manual, Inspection, Work Order).
 2. For the 4 excluded OEM manuals, substitute equivalent manuals you have rights to, or accept a small reduction in corpus size (33 vs. 37 documents) — this has a minor effect on Knowledge Graph density but does not change the evaluation methodology.
 3. Run `python backend/app/eval/run_eval.py` once ingestion completes.
