@@ -267,9 +267,14 @@ def clear_bm25_memory():
     _bm25_meta = []
     _bm25_index = None
     
-async def ingest_document(file_path, doc_id, filename, doc_type="manual",
-                          plant_id="plant_001"):
-    client     = get_groq()
+async def ingest_document(
+    file_path,
+    doc_id,
+    filename,
+    doc_type="manual",
+    plant_id="plant_001",
+):
+    client = get_groq()
     collection = get_collection()
 
     pages, page_count = extract_text_from_pdf(file_path)
@@ -277,47 +282,57 @@ async def ingest_document(file_path, doc_id, filename, doc_type="manual",
     all_chunks = []
     for page_num, page_text in enumerate(pages):
         for i, chunk in enumerate(chunk_text(page_text)):
-            all_chunks.append({
-                "id":       f"{doc_id}_p{page_num}_c{i}",
-                "text":     chunk,
-                "page":     page_num + 1,
-                "doc_id":   doc_id,
-                "filename": filename,
-                "doc_type": doc_type,
-                "plant_id": plant_id,
-            })
+            all_chunks.append(
+                {
+                    "id": f"{doc_id}_p{page_num}_c{i}",
+                    "text": chunk,
+                    "page": page_num + 1,
+                    "doc_id": doc_id,
+                    "filename": filename,
+                    "doc_type": doc_type,
+                    "plant_id": plant_id,
+                }
+            )
 
     if all_chunks:
-    texts = [c["text"] for c in all_chunks]
-    embeddings = embed_texts(
-        texts,
-        input_type="search_document",
-    )
+        texts = [c["text"] for c in all_chunks]
+        embeddings = embed_texts(
+            texts,
+            input_type="search_document",
+        )
 
-    collection.upsert(
-        ids=[c["id"] for c in all_chunks],
-        embeddings=embeddings,
-        documents=texts,
-        metadatas=[
-            {k: v for k, v in c.items() if k != "text"}
-            for c in all_chunks
-        ],
-    )
+        collection.upsert(
+            ids=[c["id"] for c in all_chunks],
+            embeddings=embeddings,
+            documents=texts,
+            metadatas=[
+                {k: v for k, v in c.items() if k != "text"}
+                for c in all_chunks
+            ],
+        )
 
     for chunk in all_chunks:
-        add_to_bm25(chunk["text"], {k: v for k, v in chunk.items() if k != "text"})
+        add_to_bm25(
+            chunk["text"],
+            {k: v for k, v in chunk.items() if k != "text"},
+        )
 
-    # extract entities from first 5 pages
     sample = "\n\n".join(pages[:5])
     entities = extract_entities_llm(sample, client)
 
-    populate_graph(doc_id, filename, entities, plant_id, doc_type)
+    populate_graph(
+        doc_id,
+        filename,
+        entities,
+        plant_id,
+        doc_type,
+    )
 
     return {
-        "doc_id":             doc_id,
-        "filename":           filename,
-        "page_count":         page_count,
-        "chunk_count":        len(all_chunks),
+        "doc_id": doc_id,
+        "filename": filename,
+        "page_count": page_count,
+        "chunk_count": len(all_chunks),
         "entities_extracted": len(entities),
-        "status":             "indexed",
+        "status": "indexed",
     }
