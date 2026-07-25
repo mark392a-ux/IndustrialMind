@@ -336,3 +336,16 @@ async def ingest_document(
         "entities_extracted": len(entities),
         "status": "indexed",
     }
+
+def reset_collection():
+    """Delete and recreate the Chroma collection — needed after switching
+    embedding providers, since dimensionality is fixed at collection creation."""
+    global _chroma_client, _collection
+    if _chroma_client is None:
+        _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
+    try:
+        _chroma_client.delete_collection("industrialmind")
+    except Exception:
+        pass  # collection may not exist yet — fine
+    _collection = None
+    get_collection()  # recreates fresh, will pick up 1024-dim on next upsert

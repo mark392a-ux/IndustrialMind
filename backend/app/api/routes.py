@@ -530,3 +530,9 @@ async def health():
         "graph_nodes": stats["total_nodes"],
         "graph_edges": stats["total_edges"],
     }
+
+@router.post("/admin/reset-embeddings")
+async def reset_embeddings():
+    from app.ingestion.pipeline import reset_collection
+    reset_collection()
+    return {"status": "collection reset — re-upload documents now"}
