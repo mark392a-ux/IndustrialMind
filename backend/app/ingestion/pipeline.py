@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Optional
 
 import chromadb
-from chromadb.utils.embedding_functions import CohereEmbeddingFunction
 import pdfplumber
 from groq import Groq
 from pypdf import PdfReader
@@ -37,26 +36,10 @@ def get_collection():
     global _chroma_client, _collection
     if _collection is None:
         _chroma_client = chromadb.PersistentClient(path=settings.chroma_persist_path)
-        embed_fn = CohereEmbeddingFunction(
-            api_key=settings.cohere_api_key,
-            model_name="embed-english-v3.0",
+        _collection = _chroma_client.get_or_create_collection(
+            name="industrialmind",
+            metadata={"hnsw:space": "cosine"},
         )
-        try:
-            _collection = _chroma_client.get_or_create_collection(
-                name="industrialmind",
-                metadata={"hnsw:space": "cosine"},
-                embedding_function=embed_fn,
-            )
-        except Exception:
-            # Existing collection was created with the old default (local) embedder —
-            # dimensions won't match. Since you've already cleared all docs, it's
-            # safe to drop and recreate cleanly with the Cohere embedder.
-            _chroma_client.delete_collection("industrialmind")
-            _collection = _chroma_client.get_or_create_collection(
-                name="industrialmind",
-                metadata={"hnsw:space": "cosine"},
-                embedding_function=embed_fn,
-            )
     return _collection
 
 
