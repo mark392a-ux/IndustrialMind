@@ -162,21 +162,21 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 
 ## 🖼️ Screenshots
 
-| Dashboard | Knowledge Graph Explorer |
+| Dashboard | Work Permit Generator |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Knowledge Graph](docs/screenshots/knowledge-graph.png) |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Work Permit](docs/screenshots/work-permit.png) |
 
 | RCA Output | Compliance Gap Detector |
 |---|---|
 | ![RCA Output](docs/screenshots/rca-output.png) | ![Compliance](docs/screenshots/compliance.png) |
 
-| Work Permit Generator |
+| Knowledge Graph Explorer |
 |---|
-| ![Work Permit](docs/screenshots/work-permit.png) |
+| ![Knowledge Graph](docs/screenshots/knowledge-graph.png) |
 
 ---
 
-## 📦 Submission Deliverables
+## 📦 Submission Deliverables (docs/screenshots/knowledge-graph.png)
 
 | Deliverable | Location |
 |---|---|
