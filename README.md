@@ -167,7 +167,7 @@ The retrieval, agentic, and fallback layers are storage-agnostic by design, so e
 | Deliverable | Location |
 |---|---|
 | Detailed Document (8–10 pages) | `docs/IndustrialMind_Detailed_Document.pdf` |
-| Demo Video (3–4 min) | *[link]* |
+| Demo Video (3–4 min) | https://drive.google.com/file/d/1qvt_0BLrzOQfd_DEKtRlAAKwcJyjWOCN/view?pli=1 |
 | Architecture Diagram | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | Evaluation Report | [EVALUATION.md](./EVALUATION.md) |
 
