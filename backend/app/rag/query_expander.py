@@ -172,7 +172,7 @@ def llm_expand_query(query: str) -> str:
     try:
         client = get_groq()
         resp = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-20b",
             max_tokens=120,
             temperature=0.0,
             messages=[{"role": "user", "content": EXPANSION_PROMPT.format(query=query)}],
@@ -208,7 +208,7 @@ def optimize_search_query(query: str, use_llm: bool = True) -> tuple[str, list[s
     # MUST run before LLM so the LLM also sees the expanded context
     step2 = apply_incident_expansion(step1)
 
-    # Step 3 — LLM expansion (fast, uses llama-3.1-8b-instant)
+    # Step 3 — LLM expansion (fast, uses openai/gpt-oss-20b)
     if use_llm:
         final_query = llm_expand_query(step2)
     else:
