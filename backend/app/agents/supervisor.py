@@ -11,16 +11,16 @@ from app.rag.retriever import hybrid_retrieve
 from app.graph.store import get_graph_store
 
 # ── Model constants ───────────────────────────────────────────────────────────
-FAST_MODEL     = "llama-3.3-70b-versatile"   # Groq primary
-FALLBACK_MODEL = "llama-3.1-8b-instant"       # Groq fallback (smaller, separate quota)
+FAST_MODEL     = "openai/gpt-oss-120b"   # Groq primary
+FALLBACK_MODEL = "openai/gpt-oss-20b"       # Groq fallback (smaller, separate quota)
 DEEP_MODEL     = "deepseek-reasoner"           # DeepSeek (RCA + compliance)
 GEMINI_MODEL   = "gemini-1.5-flash"           # Google Gemini (3rd fallback, free tier)
 
 # ── Fallback chain ────────────────────────────────────────────────────────────
 #
 #  groq_chat():
-#    1. llama-3.3-70b-versatile  (Groq primary)
-#    2. llama-3.1-8b-instant     (Groq fallback, separate quota)
+#    1. openai/gpt-oss-120b  (Groq primary)
+#    2. openai/gpt-oss-20b     (Groq fallback, separate quota)
 #    3. gemini-1.5-flash         (Google, free 1500 req/day)
 #    4. RateLimitError           (shown to user as friendly message)
 #
