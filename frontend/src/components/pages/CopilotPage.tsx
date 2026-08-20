@@ -81,7 +81,7 @@ export default function CopilotPage() {
       <div style={{ flexShrink: 0, padding: '16px 24px 14px', borderBottom: '1px solid var(--border)', background: 'var(--sidebar)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text1)' }}>💬 Expert Knowledge Copilot</h2>
-          <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 2 }}>Ask anything · hybrid retrieval · source citations · powered by Groq llama-3.3-70b · Gemini 1.5 Flash fallback</p>
+          <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 2 }}>Ask anything · hybrid retrieval · source citations · powered by Groq GPT OSS 120B / 20B · Gemini 1.5 Flash fallback</p>
         </div>
         {messages.length > 0 && (
           <button onClick={() => { setMessages([]); setSessionId(null) }} style={{
