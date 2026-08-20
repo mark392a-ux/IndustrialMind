@@ -135,7 +135,7 @@ def extract_entities_llm(text, client=None):
     try:
         groq = client or get_groq()
         resp = groq.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             max_tokens=800,
             temperature=0,
             messages=[{"role": "user", "content": ENTITY_PROMPT + text[:3000]}],
